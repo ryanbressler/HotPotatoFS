@@ -36,7 +36,6 @@ func ServeNfs(mountpoint string, nfsdir string, peerlist []string) {
 
 }
 
-// FS implements the hello world file system.
 type NfsDir struct {
 	Path string
 }
@@ -45,7 +44,6 @@ func (nf NfsDir) Root() (fs.Node, fuse.Error) {
 	return Dir{Node{Path: nf.Path}}, nil
 }
 
-// Dir implements both Node and Handle for the root directory.
 type Node struct {
 	Path string
 }
@@ -97,16 +95,11 @@ func (d Dir) ReadDir(intr fs.Intr) ([]fuse.Dirent, fuse.Error) {
 	return out, nil
 }
 
-// File implements Handle
 type File struct {
 	Node
 }
 
 func (f File) ReadAll(intr fs.Intr) ([]byte, fuse.Error) {
-	// contents, err := ioutil.ReadFile(f.Path)
-	// if err != nil {
-	// 	return contents, fuse.Errno(err.(syscall.Errno))
-	// }
 	var contents []byte
 	err := filecache.Get(nil, f.Path, groupcache.AllocatingByteSliceSink(&contents))
 	if err != nil {
