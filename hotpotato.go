@@ -20,7 +20,7 @@ func ServeDir(mountpoint string, target string, peerlist []string) {
 	// Whenever peers change:
 	//peers.Set("http://10.0.0.1", "http://10.0.0.2", "http://10.0.0.3")
 
-	fuse.Debugf = log.Printf
+	//fuse.Debugf = log.Printf
 
 	filecache = groupcache.NewGroup("filecache", 64<<20, groupcache.GetterFunc(
 		func(ctx groupcache.Context, key string, dest groupcache.Sink) error {
@@ -110,15 +110,15 @@ type File struct {
 	Node
 }
 
-// func (f File) ReadAll(intr fs.Intr) ([]byte, fuse.Error) {
-// 	var contents []byte
-// 	err := filecache.Get(nil, f.Path, groupcache.AllocatingByteSliceSink(&contents))
-// 	if err != nil {
-// 		log.Print(err)
-// 		return nil, fuse.ENOENT
-// 	}
-// 	return contents, nil
-// }
+func (f File) ReadAll(intr fs.Intr) ([]byte, fuse.Error) {
+	var contents []byte
+	err := filecache.Get(nil, f.Path, groupcache.AllocatingByteSliceSink(&contents))
+	if err != nil {
+		log.Print(err)
+		return nil, fuse.ENOENT
+	}
+	return contents, nil
+}
 
 // func (f File) Read(req *fuse.ReadRequest, resp *fuse.ReadResponse, intr fs.Intr) fuse.Error {
 // 	//log.Print("Read Called: ", req, resp, intr)
