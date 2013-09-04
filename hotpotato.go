@@ -13,12 +13,14 @@ import (
 
 var filecache *groupcache.Group
 
-func ServeNfs(mountpoint string, nfsdir string, peerlist []string) {
+func ServeDir(mountpoint string, target string, peerlist []string) {
 	// me := "http://localhost"
 	// peers := groupcache.NewHTTPPool(me)
 
 	// Whenever peers change:
 	//peers.Set("http://10.0.0.1", "http://10.0.0.2", "http://10.0.0.3")
+
+	fuse.Debugf = log.Printf
 
 	filecache = groupcache.NewGroup("filecache", 64<<20, groupcache.GetterFunc(
 		func(ctx groupcache.Context, key string, dest groupcache.Sink) error {
@@ -32,15 +34,15 @@ func ServeNfs(mountpoint string, nfsdir string, peerlist []string) {
 		log.Fatal(err)
 	}
 
-	fs.Serve(c, NfsDir{nfsdir})
+	fs.Serve(c, TargetDir{target})
 
 }
 
-type NfsDir struct {
+type TargetDir struct {
 	Path string
 }
 
-func (nf NfsDir) Root() (fs.Node, fuse.Error) {
+func (nf TargetDir) Root() (fs.Node, fuse.Error) {
 	return Dir{Node{Path: nf.Path}}, nil
 }
 
@@ -51,6 +53,7 @@ type Node struct {
 func (n Node) Attr() fuse.Attr {
 	s, err := os.Stat(n.Path)
 	if err != nil {
+		log.Print(err)
 		return fuse.Attr{}
 	}
 
@@ -66,13 +69,17 @@ func (d Dir) Lookup(name string, intr fs.Intr) (fs fs.Node, error fuse.Error) {
 	path := filepath.Join(d.Path, name)
 	s, err := os.Stat(path)
 	if err != nil {
+		log.Print(err)
 		return nil, fuse.ENOENT
 	}
 	node := Node{path}
-	if s.IsDir() {
+	switch {
+	case s.IsDir():
 		fs = Dir{node}
-	} else {
+	case s.Mode().IsRegular():
 		fs = File{node}
+	default:
+		fs = node
 	}
 
 	return
@@ -82,12 +89,16 @@ func (d Dir) ReadDir(intr fs.Intr) ([]fuse.Dirent, fuse.Error) {
 	var out []fuse.Dirent
 	files, err := ioutil.ReadDir(d.Path)
 	if err != nil {
+		log.Print(err)
 		return nil, fuse.Errno(err.(syscall.Errno))
 	}
 	for _, d := range files {
 		de := fuse.Dirent{Name: d.Name()}
 		if d.IsDir() {
 			de.Type = fuse.DT_Dir
+		}
+		if d.Mode().IsRegular() {
+			de.Type = fuse.DT_File
 		}
 		out = append(out, de)
 	}
@@ -103,7 +114,23 @@ func (f File) ReadAll(intr fs.Intr) ([]byte, fuse.Error) {
 	var contents []byte
 	err := filecache.Get(nil, f.Path, groupcache.AllocatingByteSliceSink(&contents))
 	if err != nil {
+		log.Print(err)
 		return nil, fuse.ENOENT
 	}
 	return contents, nil
+}
+
+func (f File) Read(req *fuse.ReadRequest, resp *fuse.ReadResponse, intr fs.Intr) fuse.Error {
+	//log.Print("Read Called: ", req, resp, intr)
+	//fuse.Debugf = log.Printf
+	var dst groupcache.ByteView
+	err := filecache.Get(nil, f.Path, groupcache.ByteViewSink(&dst))
+	if err != nil {
+		log.Print(err)
+		return fuse.ENOENT
+	}
+
+	resp = &fuse.ReadResponse{Data: dst.Slice(int(req.Offset), int(req.Offset)+req.Size).ByteSlice()}
+
+	return nil
 }

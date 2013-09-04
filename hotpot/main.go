@@ -14,6 +14,6 @@ func main() {
 
 	flag.Parse()
 
-	HotPotatoFS.ServeNfs(mountpoint, target, nil)
+	HotPotatoFS.ServeDir(mountpoint, target, nil)
 
 }
