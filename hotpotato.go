@@ -110,27 +110,27 @@ type File struct {
 	Node
 }
 
-func (f File) ReadAll(intr fs.Intr) ([]byte, fuse.Error) {
-	var contents []byte
-	err := filecache.Get(nil, f.Path, groupcache.AllocatingByteSliceSink(&contents))
-	if err != nil {
-		log.Print(err)
-		return nil, fuse.ENOENT
-	}
-	return contents, nil
-}
+// func (f File) ReadAll(intr fs.Intr) ([]byte, fuse.Error) {
+// 	var contents []byte
+// 	err := filecache.Get(nil, f.Path, groupcache.AllocatingByteSliceSink(&contents))
+// 	if err != nil {
+// 		log.Print(err)
+// 		return nil, fuse.ENOENT
+// 	}
+// 	return contents, nil
+// }
 
-func (f File) Read(req *fuse.ReadRequest, resp *fuse.ReadResponse, intr fs.Intr) fuse.Error {
-	//log.Print("Read Called: ", req, resp, intr)
-	//fuse.Debugf = log.Printf
-	var dst groupcache.ByteView
-	err := filecache.Get(nil, f.Path, groupcache.ByteViewSink(&dst))
-	if err != nil {
-		log.Print(err)
-		return fuse.ENOENT
-	}
+// func (f File) Read(req *fuse.ReadRequest, resp *fuse.ReadResponse, intr fs.Intr) fuse.Error {
+// 	//log.Print("Read Called: ", req, resp, intr)
+// 	//fuse.Debugf = log.Printf
+// 	var dst groupcache.ByteView
+// 	err := filecache.Get(nil, f.Path, groupcache.ByteViewSink(&dst))
+// 	if err != nil {
+// 		log.Print(err)
+// 		return fuse.ENOENT
+// 	}
 
-	resp = &fuse.ReadResponse{Data: dst.Slice(int(req.Offset), int(req.Offset)+req.Size).ByteSlice()}
+// 	resp = &fuse.ReadResponse{Data: dst.Slice(int(req.Offset), int(req.Offset)+req.Size).ByteSlice()}
 
-	return nil
-}
+// 	return nil
+// }
