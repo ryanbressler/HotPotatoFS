@@ -20,7 +20,7 @@ func ServeDir(mountpoint string, target string, peerlist []string) {
 	// Whenever peers change:
 	//peers.Set("http://10.0.0.1", "http://10.0.0.2", "http://10.0.0.3")
 
-	//fuse.Debugf = log.Printf
+	fuse.Debugf = log.Printf
 
 	filecache = groupcache.NewGroup("filecache", 64<<20, groupcache.GetterFunc(
 		func(ctx groupcache.Context, key string, dest groupcache.Sink) error {
