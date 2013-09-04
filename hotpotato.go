@@ -3,15 +3,30 @@ package HotPotatoFS
 import (
 	"bazil.org/fuse"
 	"bazil.org/fuse/fs"
+	"github.com/golang/groupcache"
 	"io/ioutil"
-	//"github.com/golang/groupcache"
 	"log"
 	"os"
 	"path/filepath"
 	"syscall"
 )
 
-func ServeNfs(mountpoint string, nfsdir string) {
+var filecache *groupcache.Group
+
+func ServeNfs(mountpoint string, nfsdir string, peerlist []string) {
+	// me := "http://localhost"
+	// peers := groupcache.NewHTTPPool(me)
+
+	// Whenever peers change:
+	//peers.Set("http://10.0.0.1", "http://10.0.0.2", "http://10.0.0.3")
+
+	filecache = groupcache.NewGroup("filecache", 64<<20, groupcache.GetterFunc(
+		func(ctx groupcache.Context, key string, dest groupcache.Sink) error {
+			contents, err := ioutil.ReadFile(key)
+			dest.SetBytes(contents)
+			return err
+		}))
+
 	c, err := fuse.Mount(mountpoint)
 	if err != nil {
 		log.Fatal(err)
@@ -87,6 +102,15 @@ type File struct {
 	Node
 }
 
-func (File) ReadAll(intr fs.Intr) ([]byte, fuse.Error) {
-	return []byte("hello, world\n"), nil
+func (f File) ReadAll(intr fs.Intr) ([]byte, fuse.Error) {
+	// contents, err := ioutil.ReadFile(f.Path)
+	// if err != nil {
+	// 	return contents, fuse.Errno(err.(syscall.Errno))
+	// }
+	var contents []byte
+	err := filecache.Get(nil, f.Path, groupcache.AllocatingByteSliceSink(&contents))
+	if err != nil {
+		return nil, fuse.ENOENT
+	}
+	return contents, nil
 }
