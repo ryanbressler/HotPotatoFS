@@ -1,4 +1,4 @@
-![Potato](potato.png "potato image copyleft David Gibbs") HotPotatoFS
+![Potato](potatosmall.png "potato image copyleft David Gibbs") HotPotatoFS
 ===========
 
 Group Cache + FUSE = Distribute in Memory Filesystem
