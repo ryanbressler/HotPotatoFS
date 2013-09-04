@@ -11,7 +11,7 @@ of a slow disk or network mount (nfs, s3, smb etc) on one or many machines to re
 needed to repeatedly read a file.
 
 It was developed primairly for use in parralel data analysis and simulation. You can use it
-to speed up a parallle matlab, R, python etc job running via golem, qsub, gnu parralel etc
+to speed up a parralel matlab, R, python etc job running via golem, qsub, gnu parralel etc
 without needing to rewrite the analysis code.
 
 It is expermental software in an early state of development and may break.
