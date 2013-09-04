@@ -1,4 +1,4 @@
-![Potato](potatosmall.png "potato image copyleft David Gibbs") HotPotatoFS![Potato](potatosmall.png "potato image copyleft David Gibbs")
+![Potato](potatosmall.png "potato image copyleft David Gibbs")     HotPotatoFS    ![Potato](potatosmall.png "potato image copyleft David Gibbs")
 ===========
 
 Group Cache + FUSE = Read Only Distribute in Memory Filesystem
