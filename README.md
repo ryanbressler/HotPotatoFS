@@ -3,16 +3,20 @@
 
 ```
 HotPotato = Playing catch in a group with a FUSE/timelimit
-Group Cache + FUSE = Read Only Distribute in Memory Filesystem
+Group Cache + FUSE = Read-Only, Distribute in Memory Filesystem
 ```
 
-HotPotato is a simple read only FUSE filesystem used to put groupcache in front of a slow
-disk or network mount (nfs, s3 etc) to reduce data acces time. It was developed for
-use in parralel data analysis and simulation. 
+HotPotato is a simple read-only, in memory, FUSE filesystem used to put groupcache in front 
+of a slow disk or network mount (nfs, s3, smb etc) on one or many machines to reduce the time
+needed to repeatedly read a file.
+
+It was developed primairly for use in parralel data analysis and simulation. You can use it
+to speed up a parallle matlab, R, python etc job running via golem, qsub, gnu parralel etc
+without needing to rewrite the analysis code.
 
 It is expermental software in an early state of development and may break.
 
-It is written in golang and combines groupcache and the bazil.org fuse library: 
+It is written in go (golang) using groupcache and the bazil.org fuse library: 
 https://github.com/golang/groupcache
 http://bazil.org/fuse/
 
@@ -41,6 +45,6 @@ computing in cancer and biomedical research as part of our work on The Cancer Ge
 
 Code is under a 3 clause BSD. 
 
-HotPotato image copyleft David Gibbs.
+Potato image copyleft David Gibbs.
 
 
