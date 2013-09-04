@@ -3,7 +3,7 @@
 
 ```
 HotPotato = Playing catch in a group with a FUSE/timelimit
-Group Cache + FUSE = Read-Only, Distribute in Memory Filesystem
+Group Cache + FUSE = Read-Only, Distribute in Memory Filesystem in Go
 ```
 
 HotPotato is a simple read-only, in memory, FUSE filesystem used to put groupcache in front 
@@ -16,8 +16,10 @@ without needing to rewrite the analysis code.
 
 It is expermental software in an early state of development and may break.
 
-It is written in go (golang) using groupcache and the bazil.org fuse library: 
+It is written in go (golang) using groupcache and the bazil.org fuse library:
+
 https://github.com/golang/groupcache
+
 http://bazil.org/fuse/
 
 
@@ -37,7 +39,7 @@ hotpot -mountpoint /hotpotato -target /nfsmount
 
 ```
 
-Administrive
+Credit
 ------------
 
 HotPotatofFS was developed by members of the Shumelevich lab at the Institute for Systems Biology to support distributed
