@@ -10,6 +10,7 @@ NFS mount, amazon bucket etc in a cluster/cloud to reduce data access times.
 It is expermental software in an early state of development.
 
 Code is under a 3 clause BSD. 
-potato image copyleft David Gibbs.
+
+Potato image copyleft David Gibbs.
 
 
