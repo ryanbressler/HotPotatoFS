@@ -1,12 +1,14 @@
-![Potato](potatosmall.png "potato image copyleft David Gibbs")     HotPotatoFS    ![Potato](potatosmall.png "potato image copyleft David Gibbs")
+![Potato](potatosmall.png "potato image copyleft David Gibbs")     HotPotatoFS 
 ===========
 
-
+```
 HotPotato = Playing catch in a group with a FUSE/timelimit
 Group Cache + FUSE = Read Only Distribute in Memory Filesystem
+```
 
-HotPotato is a simple read only FUSE filesystem used to put groupcache in front of a slow 
-network mount (nfs, s3 etc) to reduce data acces time.
+HotPotato is a simple read only FUSE filesystem used to put groupcache in front of a slow
+disk or network mount (nfs, s3 etc) to reduce data acces time. It was developed for
+use in parralel data analysis and simulation. 
 
 It is expermental software in an early state of development and may break.
 
