@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"github.com/ryanbressler/HotPotato"
+	"github.com/ryanbressler/HotPotatoFS"
 )
 
 func main() {
@@ -14,6 +14,6 @@ func main() {
 
 	flag.Parse()
 
-	HotPotato.ServeNfs(mountpoint, target)
+	HotPotatoFS.ServeNfs(mountpoint, target)
 
 }

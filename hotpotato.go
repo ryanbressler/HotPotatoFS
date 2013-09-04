@@ -7,6 +7,7 @@ import (
 	//"github.com/golang/groupcache"
 	"log"
 	"os"
+	"path/filepath"
 	"syscall"
 )
 
@@ -47,12 +48,22 @@ type Dir struct {
 	Node
 }
 
-// func (Dir) Lookup(name string, intr fs.Intr) (fs.Node, fuse.Error) {
-// 	if name == "hello" {
-// 		return File{}, nil
-// 	}
-// 	return nil, fuse.ENOENT
-// }
+func (d Dir) Lookup(name string, intr fs.Intr) (fs fs.Node, error fuse.Error) {
+
+	path := filepath.Join(d.Path, name)
+	s, err := os.Stat(path)
+	if err != nil {
+		return nil, fuse.ENOENT
+	}
+	node := Node{path}
+	if s.IsDir() {
+		fs = Dir{node}
+	} else {
+		fs = File{node}
+	}
+
+	return
+}
 
 func (d Dir) ReadDir(intr fs.Intr) ([]fuse.Dirent, fuse.Error) {
 	var out []fuse.Dirent
