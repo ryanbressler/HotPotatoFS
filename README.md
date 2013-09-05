@@ -47,18 +47,18 @@ Multi Machine
 
 peerfile.txt:
 ```
-http:\\host1:8080
-http:\\host2:8080
+http://host1:8080
+http://host2:8080
 ```
 
 host1:
 ```bash
-hotpot -mountpoint /hotpotato -target /nfsmount -me http:\\host1:8080 -peers peerfile.txt
+hotpot -mountpoint /hotpotato -target /nfsmount -me http://host1:8080 -peers peerfile.txt
 ```
 
 host2:
 ```bash
-hotpot -mountpoint /hotpotato -target /nfsmount -me http:\\host2:8080 -peers peerfile.txt
+hotpot -mountpoint /hotpotato -target /nfsmount -me http://host2:8080 -peers peerfile.txt
 ```
 
 
