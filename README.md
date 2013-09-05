@@ -30,16 +30,37 @@ QuickStart
 
 With go and go path set up:
 
+Instalation
+
 ```bash
 go get github.com/ryanbressler/HotPotatoFS
 go install github.com/ryanbressler/HotPotatoFS/hotpot
-
-# single machine
-hotpot -mountpoint /hotpotato -target /nfsmount
-
-# config file for multple peers coming soon.
-
 ```
+
+Single Machine
+
+```bash
+hotpot -mountpoint /hotpotato -target /nfsmount
+```
+
+Multi Machine
+
+peerfile.txt:
+```
+http:\\host1:8080
+http:\\host2:8080
+```
+
+host1:
+```bash
+hotpot -mountpoint /hotpotato -target /nfsmount -me http:\\host1:8080 -peers peerfile.txt
+```
+
+host2:
+```bash
+hotpot -mountpoint /hotpotato -target /nfsmount -me http:\\host2:8080 -peers peerfile.txt
+```
+
 
 Credit
 ------------

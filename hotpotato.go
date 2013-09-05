@@ -13,16 +13,15 @@ import (
 
 var filecache *groupcache.Group
 
-func ServeDir(mountpoint string, target string, peerlist []string) {
-	// me := "http://localhost"
-	// peers := groupcache.NewHTTPPool(me)
+func ServeDir(mountpoint string, target string, limit int, me string, peerlist []string) {
 
-	// Whenever peers change:
-	//peers.Set("http://10.0.0.1", "http://10.0.0.2", "http://10.0.0.3")
+	peers := groupcache.NewHTTPPool(me)
 
-	//fuse.Debugf = log.Printf
+	if peerlist != nil && len(peerlist) > 0 {
+		peers.Set(peerlist...)
+	}
 
-	filecache = groupcache.NewGroup("filecache", 64<<20, groupcache.GetterFunc(
+	filecache = groupcache.NewGroup("filecache", int64(limit)<<20, groupcache.GetterFunc(
 		func(ctx groupcache.Context, key string, dest groupcache.Sink) error {
 			contents, err := ioutil.ReadFile(key)
 			dest.SetBytes(contents)
