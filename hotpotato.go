@@ -91,12 +91,12 @@ func (d Dir) ReadDir(intr fs.Intr) ([]fuse.Dirent, fuse.Error) {
 		log.Print(err)
 		return nil, fuse.Errno(err.(syscall.Errno))
 	}
-	for _, d := range files {
-		de := fuse.Dirent{Name: d.Name()}
-		if d.IsDir() {
+	for _, node := range files {
+		de := fuse.Dirent{Name: node.Name()}
+		if node.IsDir() {
 			de.Type = fuse.DT_Dir
 		}
-		if d.Mode().IsRegular() {
+		if node.Mode().IsRegular() {
 			de.Type = fuse.DT_File
 		}
 		out = append(out, de)
